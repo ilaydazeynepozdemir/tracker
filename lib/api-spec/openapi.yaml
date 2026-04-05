@@ -1,0 +1,276 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Su Takip API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: water
+    description: Water intake tracking
+  - name: goals
+    description: Daily water goals
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /water/entries:
+    get:
+      operationId: listWaterEntries
+      tags: [water]
+      summary: List water entries
+      description: Returns water intake entries, optionally filtered by date
+      parameters:
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter entries by date (YYYY-MM-DD). Defaults to today.
+      responses:
+        "200":
+          description: List of water entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WaterEntry"
+    post:
+      operationId: createWaterEntry
+      tags: [water]
+      summary: Add water intake
+      description: Logs a new water intake entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWaterEntryBody"
+      responses:
+        "201":
+          description: Created water entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaterEntry"
+
+  /water/entries/{id}:
+    delete:
+      operationId: deleteWaterEntry
+      tags: [water]
+      summary: Delete a water entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Entry deleted
+
+  /water/summary:
+    get:
+      operationId: getWaterSummary
+      tags: [water]
+      summary: Get water intake summary for today
+      description: Returns total intake, goal, percentage, and streak
+      responses:
+        "200":
+          description: Today's water summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaterSummary"
+
+  /water/history:
+    get:
+      operationId: getWaterHistory
+      tags: [water]
+      summary: Get 7-day water intake history
+      description: Returns daily totals for the past 7 days
+      responses:
+        "200":
+          description: Weekly history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DailyTotal"
+
+  /goals:
+    get:
+      operationId: getGoal
+      tags: [goals]
+      summary: Get the daily water goal
+      responses:
+        "200":
+          description: Current goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+    put:
+      operationId: updateGoal
+      tags: [goals]
+      summary: Update the daily water goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGoalBody"
+      responses:
+        "200":
+          description: Updated goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    WaterEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        amountMl:
+          type: integer
+          description: Amount in milliliters
+        drinkType:
+          type: string
+          description: "Type of drink: water, tea, coffee, juice, etc."
+        note:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date
+      required:
+        - id
+        - amountMl
+        - drinkType
+        - createdAt
+        - date
+
+    CreateWaterEntryBody:
+      type: object
+      properties:
+        amountMl:
+          type: integer
+          minimum: 1
+          maximum: 5000
+          description: Amount in milliliters
+        drinkType:
+          type: string
+          description: "Type of drink: water, tea, coffee, juice, etc."
+          default: water
+        note:
+          type: string
+          nullable: true
+      required:
+        - amountMl
+
+    WaterSummary:
+      type: object
+      properties:
+        totalMl:
+          type: integer
+          description: Total intake today in ml
+        goalMl:
+          type: integer
+          description: Daily goal in ml
+        percentage:
+          type: number
+          description: Percentage of goal reached (0-100+)
+        streak:
+          type: integer
+          description: Number of consecutive days goal was met
+        entriesCount:
+          type: integer
+          description: Number of entries today
+        date:
+          type: string
+          format: date
+      required:
+        - totalMl
+        - goalMl
+        - percentage
+        - streak
+        - entriesCount
+        - date
+
+    DailyTotal:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        totalMl:
+          type: integer
+        goalMl:
+          type: integer
+        goalMet:
+          type: boolean
+      required:
+        - date
+        - totalMl
+        - goalMl
+        - goalMet
+
+    Goal:
+      type: object
+      properties:
+        id:
+          type: integer
+        goalMl:
+          type: integer
+          description: Daily water goal in ml
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - goalMl
+        - updatedAt
+
+    UpdateGoalBody:
+      type: object
+      properties:
+        goalMl:
+          type: integer
+          minimum: 500
+          maximum: 10000
+          description: Daily water goal in ml
+      required:
+        - goalMl

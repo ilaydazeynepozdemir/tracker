@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Su Takip"
+version = "1.0.0"
+id = "artifacts/su-takip"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24684
+
+[services.development]
+run = "pnpm --filter @workspace/su-takip run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/su-takip", "run", "build" ]
+publicDir = "artifacts/su-takip/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24684"
+BASE_PATH = "/"
