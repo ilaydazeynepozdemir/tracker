@@ -8,6 +8,7 @@ import {
   getGetWaterSummaryQueryKey,
   getListWaterEntriesQueryKey,
   getGetWaterHistoryQueryKey,
+  type WaterEntry,
 } from "@workspace/api-client-react";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
@@ -123,7 +124,7 @@ export default function DashboardScreen() {
 
   const isLoading = summary.isLoading;
   const summaryData = summary.data;
-  const entriesData = entries.data ?? [];
+  const entriesData = Array.isArray(entries.data) ? entries.data : [];
 
   const paddingBottom =
     Platform.OS === "web" ? 34 + 50 : insets.bottom + 80;
@@ -144,7 +145,7 @@ export default function DashboardScreen() {
         <View style={styles.header}>
           <View>
             <Text style={[styles.greeting, { color: colors.mutedForeground }]}>
-              Gunluk Hedef
+              Günlük Hedef
             </Text>
             <Text style={[styles.title, { color: colors.foreground }]}>
               Su Takip
@@ -159,7 +160,7 @@ export default function DashboardScreen() {
             >
               <Feather name="zap" size={14} color={colors.orange} />
               <Text style={[styles.streakText, { color: colors.orange }]}>
-                {summaryData.streak} gun seri
+                {summaryData.streak} gün seri
               </Text>
             </View>
           )}
@@ -180,7 +181,7 @@ export default function DashboardScreen() {
 
         {/* Quick Add */}
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-          Hizli Ekle
+          Hızlı Ekle
         </Text>
         <View style={styles.quickRow}>
           {QUICK_AMOUNTS.map(({ amount, label }) => (
@@ -192,14 +193,14 @@ export default function DashboardScreen() {
               loading={addingId === amount && createEntry.isPending}
               color={
                 amount === 100
-                  ? colors.pinkLight
+                  ? colors.pink
                   : amount === 200
-                  ? colors.blueLight
+                  ? colors.blue
                   : amount === 250
-                  ? colors.purpleLight
+                  ? colors.purple
                   : amount === 330
-                  ? colors.orangeLight
-                  : colors.pinkLight
+                  ? colors.orange
+                  : colors.pink
               }
             />
           ))}
@@ -217,14 +218,14 @@ export default function DashboardScreen() {
           ]}
         >
           <Feather name="plus-circle" size={18} color="#fff" />
-          <Text style={styles.customBtnText}>Ozel Miktar Ekle</Text>
+          <Text style={styles.customBtnText}>Özel Miktar Ekle</Text>
         </Pressable>
 
         {/* Today's Entries */}
         {entriesData.length > 0 && (
           <>
             <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-              Bugunun Kayitlari
+              Bugünün Kayıtları
             </Text>
             <View style={styles.entriesList}>
               {entriesData.map((entry) => (

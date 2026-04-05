@@ -81,7 +81,7 @@ export default function SettingsScreen() {
         <View style={styles.cardHeader}>
           <Feather name="target" size={20} color={colors.pink} />
           <Text style={[styles.cardTitle, { color: colors.foreground }]}>
-            Gunluk Su Hedefi
+            Günlük Su Hedefi
           </Text>
         </View>
 
@@ -98,7 +98,7 @@ export default function SettingsScreen() {
 
             {/* Preset Buttons */}
             <Text style={[styles.label, { color: colors.mutedForeground }]}>
-              Hazir Hedefler
+              Hazır Hedefler
             </Text>
             <View style={styles.presetRow}>
               {PRESET_GOALS.map((g) => (
@@ -133,7 +133,7 @@ export default function SettingsScreen() {
 
             {/* Custom Input */}
             <Text style={[styles.label, { color: colors.mutedForeground }]}>
-              Ozel Hedef (ml)
+              Özel Hedef (ml)
             </Text>
             <View style={styles.inputRow}>
               <TextInput
@@ -188,7 +188,7 @@ export default function SettingsScreen() {
           </Text>
         </View>
         <Text style={[styles.infoText, { color: colors.foreground }]}>
-          Saglik uzmanları yetiskinler icin gunluk 2-3 litre su tuketimini oneriyor. Aktif spor yapıyorsaniz bu miktarı artirabilirsiniz.
+          Sağlık uzmanları yetişkinler için günlük 2-3 litre su tüketimini öneriyor. Aktif spor yapıyorsanız bu miktarı artırabilirsiniz. Bu uygulama sadece takip amaçlıdır ve sağlık danışmanlığı sağlamaz.
         </Text>
       </View>
 
@@ -201,7 +201,7 @@ export default function SettingsScreen() {
           </Text>
         </View>
         <Text style={[styles.infoText, { color: colors.foreground }]}>
-          Sabah uyandığınızda bir bardak su icmek metabolizmanizi hizlandirir ve gunun geri kalanında daha az susarsınız.
+           Sabah uyandığınızda bir bardak su içmek metabolizmanızı hızlandırır ve günün geri kalanında daha az susarsınız. Bu uygulama sadece takip amaçlıdır ve sağlık danışmanlığı sağlamaz.
         </Text>
       </View>
     </ScrollView>
