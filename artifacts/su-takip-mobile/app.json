@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.ilayda.sutakip",
-      "versionCode": 1
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/images/icon.png"
